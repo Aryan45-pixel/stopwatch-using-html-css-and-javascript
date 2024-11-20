@@ -1,0 +1,34 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Step 1: Load Data
+data = pd.read_csv('election_data.csv')
+
+# Step 2: Preprocess Data
+data = pd.get_dummies(data)  # Convert categorical variables
+X = data.drop('target_variable', axis=1)  # Features
+y = data['target_variable']  # Target variable
+
+# Step 3: Split Data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 4: Train Model
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+
+# Step 5: Make Predictions
+y_pred = model.predict(X_test)
+
+# Step 6: Evaluate Model
+print(classification_report(y_test, y_pred))
+confusion_mtx = confusion_matrix(y_test, y_pred)
+
+# Step 7: Visualize Confusion Matrix
+sns.heatmap(confusion_mtx, annot=True, fmt='d')
+plt.ylabel('Actual')
+plt.xlabel('Predicted')
+plt.show()
